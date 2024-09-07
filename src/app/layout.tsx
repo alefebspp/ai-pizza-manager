@@ -1,7 +1,9 @@
 import "~/styles/globals.css";
-
+import { Toaster } from "~/components/ui/toaster";
 import { GeistSans } from "geist/font/sans";
 import { type Metadata } from "next";
+import NavBar from "~/components/NavBar";
+import Providers from "~/providers";
 
 export const metadata: Metadata = {
   title: "Create T3 App",
@@ -14,7 +16,18 @@ export default function RootLayout({
 }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en" className={`${GeistSans.variable}`}>
-      <body>{children}</body>
+      <body>
+        <Providers>
+          <main className="flex min-h-screen flex-col lg:flex-row">
+            <NavBar.Sheet>
+              <NavBar.Content />
+            </NavBar.Sheet>
+            <NavBar.Content className="hidden lg:flex" />
+            <div className="flex-1 bg-muted/40 p-4">{children}</div>
+          </main>
+        </Providers>
+        <Toaster />
+      </body>
     </html>
   );
 }
