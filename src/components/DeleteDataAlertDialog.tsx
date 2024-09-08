@@ -51,7 +51,7 @@ export default function DeleteDataAlertDialog({
             <AlertDialogCancel onClick={() => setIsOpen(false)}>
               Cancelar
             </AlertDialogCancel>
-            <Button disabled={isSubmitting} type="submit" className="w-24">
+            <Button disabled={isSubmitting} type="submit" className="lg:w-24">
               {isSubmitting ? (
                 <LoaderCircle className="h-4 w-4 animate-spin text-white" />
               ) : (
