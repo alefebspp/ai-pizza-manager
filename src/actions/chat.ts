@@ -48,11 +48,20 @@ export async function getChatInfos(){
         answer: string;
         id: string;
         }[];
+        status?: number
     } = await response.json()
 
     const chatMessages: Message[] = []
 
-    if(responseData.data.length > 0){
+    if(responseData.status === 404){
+        return {
+            limit: 0,
+            has_more: false,
+            data: []
+        }
+    }
+
+    if(responseData.data && responseData.data.length > 0){
         responseData.data.forEach(({query, answer, id}) => {
             chatMessages.push({user: "customer", message: query, id: `customer-${id}`})
             chatMessages.push({user: "bot", message: answer, id: `bot-${id}`})
