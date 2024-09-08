@@ -3,6 +3,7 @@ import {  count, eq, } from "drizzle-orm";
 import { db } from "~/server/db";
 import { orders as ordersTable, orders_items as ordersItemsTable, SelectIngredient, SelectOrderItem} from "~/server/db/schema";
 import { Order } from "~/types";
+import { getIngredient, updateIngredient } from "./ingredients";
 
 type OrderItem = {
     ingredient: SelectIngredient
@@ -21,17 +22,21 @@ export type OrderIngredients = {
     ingredient: SelectIngredient
 }
 
-export async function createOrder({ingredients_ids}: {ingredients_ids: number[]}){
+export async function createOrder({ingredients}: {ingredients: SelectIngredient[]}){
     const [order] = await db.insert(ordersTable).values({status: "pending"}).returning()
 
     if(order){
-        for(const id of ingredients_ids){
-            await db.insert(ordersItemsTable).values({order_id: order.id, ingredient_id: id})
+        for(const ingredient of ingredients){
+                const quantity = ingredient.quantity
+                if(quantity && quantity > 0){
+                    await db.insert(ordersItemsTable).values({order_id: order.id, ingredient_id: ingredient.id})
+                    await updateIngredient({id: ingredient.id, data: {quantity: quantity - 1} })
+                }
+            
         }
-
+        
+        return order?.id
     }
-
-    return order?.id
 }
 
 export async function updateOrder({status, id}: {status: string; id: number}) {
