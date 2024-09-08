@@ -4,8 +4,20 @@ import { Home, ShoppingBasket, ShoppingCart } from "lucide-react";
 import { cn } from "~/lib/utils";
 import { usePathname } from "next/navigation";
 
-export default function NavBarContent({ className }: { className?: string }) {
+export default function NavBarContent({
+  className,
+  onNavigate,
+}: {
+  className?: string;
+  onNavigate?: () => void;
+}) {
   const pathname = usePathname();
+
+  function linkOnClick() {
+    if (onNavigate) {
+      onNavigate();
+    }
+  }
 
   return (
     <nav
@@ -23,7 +35,7 @@ export default function NavBarContent({ className }: { className?: string }) {
               pathname == "/",
           },
         )}
-        prefetch={false}
+        onClick={linkOnClick}
       >
         <Home className="h-5 w-5" />
         <span>Home</span>
@@ -37,7 +49,7 @@ export default function NavBarContent({ className }: { className?: string }) {
               pathname == "/ingredients",
           },
         )}
-        prefetch={false}
+        onClick={linkOnClick}
       >
         <ShoppingBasket className="h-5 w-5" />
         <span>Ingredientes</span>
@@ -51,7 +63,7 @@ export default function NavBarContent({ className }: { className?: string }) {
               pathname == "/orders",
           },
         )}
-        prefetch={false}
+        onClick={linkOnClick}
       >
         <ShoppingCart className="h-5 w-5" />
         <span>Pedidos</span>
