@@ -18,10 +18,8 @@ export default function RootLayout({
     <html lang="en" className={`${GeistSans.variable}`}>
       <body>
         <Providers>
-          <main className="flex min-h-screen flex-col lg:flex-row">
-            <NavBar.Sheet>
-              <NavBar.Content />
-            </NavBar.Sheet>
+          <main className="flex min-h-screen flex-col bg-muted/40 lg:flex-row">
+            <NavBar.Sheet />
             <NavBar.Content className="hidden lg:flex" />
             <div className="flex-1 bg-muted/40 p-4">{children}</div>
           </main>

@@ -52,10 +52,12 @@ export async function getChatInfos(){
 
     const chatMessages: Message[] = []
 
-    responseData.data.forEach(({query, answer, id}) => {
-        chatMessages.push({user: "customer", message: query, id: `customer-${id}`})
-        chatMessages.push({user: "bot", message: answer, id: `bot-${id}`})
-    })
+    if(responseData.data.length > 0){
+        responseData.data.forEach(({query, answer, id}) => {
+            chatMessages.push({user: "customer", message: query, id: `customer-${id}`})
+            chatMessages.push({user: "bot", message: answer, id: `bot-${id}`})
+        })
+    }
 
     const chatInfos: ChatInfos = {
         ...responseData,

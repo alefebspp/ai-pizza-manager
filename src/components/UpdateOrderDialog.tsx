@@ -106,7 +106,6 @@ export default function UpdateOrderDialog() {
   }, [isOpen]);
 
   useEffect(() => {
-    console.log("ORDER:", order);
     if (order && toUpdateDataId) {
       reset({
         status: order.orderInfos?.status || "",
