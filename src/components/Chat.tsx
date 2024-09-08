@@ -47,17 +47,22 @@ export default function Chat({ infos }: { infos: ChatInfos }) {
     }, 1);
   }
 
+  function handleMessages(newMessage: {
+    user: string;
+    message: string;
+    id: string;
+  }) {
+    setMessages((prev) => [...prev, newMessage]);
+  }
+
   async function onSubmit(values: z.infer<typeof schema>) {
     reset({ message: "" });
 
-    setMessages((prev) => [
-      ...prev,
-      {
-        user: "customer",
-        message: values.message,
-        id: `customer-${new Date().toISOString()}`,
-      },
-    ]);
+    handleMessages({
+      user: "customer",
+      message: values.message,
+      id: `customer-${new Date().toISOString()}`,
+    });
 
     scrollToBottom();
 
@@ -66,10 +71,7 @@ export default function Chat({ infos }: { infos: ChatInfos }) {
     });
 
     if (answer) {
-      setMessages((prev) => [
-        ...prev,
-        { user: "bot", message: answer, id: `bot-${message_id}` },
-      ]);
+      handleMessages({ user: "bot", message: answer, id: `bot-${message_id}` });
     }
     scrollToBottom();
   }
