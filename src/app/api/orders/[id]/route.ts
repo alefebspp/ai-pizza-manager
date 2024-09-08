@@ -1,12 +1,19 @@
 import { getOrder } from "~/actions/orders"
+import { NextResponse } from "next/server";
 
 
 export async function GET(request: Request, { params }: { params: { id: string } }) {
     const order = await getOrder(parseInt(params.id))
 
     if(!order){
-        return Response.json({ message: "Order not found" })
+        return NextResponse.json(
+            { message: "Order not found"},
+            { status: 400 }
+          );
     }
    
-    return Response.json({ ...order })
+    return NextResponse.json(
+        { ...order},
+        { status: 200 }
+      );
   }
