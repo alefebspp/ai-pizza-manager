@@ -63,24 +63,26 @@ export async function getOrders({page}: GetOrdersParams) {
 
   const formattedOrders: Order[] = []
 
-  orders.forEach(({orderIngredients, ...order}) => {
-    const formattedOrder = {
-        ...order,
-        ingredients: []
-    }
-
-    const orderInfos = orderIngredients as OrderIngredients[]
-    const ingredients: SelectIngredient[] = []
-
-    orderInfos.forEach(({ ingredient}) => {
-        ingredients.push(ingredient)
-    })
-
-    Object.assign(formattedOrder, {
-        ingredients
-    })
-    formattedOrders.push(formattedOrder)
-  })
+  if(orders.length > 0){
+    orders.forEach(({orderIngredients, ...order}) => {
+        const formattedOrder = {
+            ...order,
+            ingredients: []
+        }
+    
+        const orderInfos = orderIngredients as OrderIngredients[]
+        const ingredients: SelectIngredient[] = []
+    
+        orderInfos.forEach(({ ingredient}) => {
+            ingredients.push(ingredient)
+        })
+    
+        Object.assign(formattedOrder, {
+            ingredients
+        })
+        formattedOrders.push(formattedOrder)
+      })
+  }
   
   return {
    data: formattedOrders,
