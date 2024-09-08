@@ -1,11 +1,12 @@
 "use server"
-import {  count, ilike, asc, eq, } from "drizzle-orm";
+import {  count, ilike, asc, eq, gt, and } from "drizzle-orm";
 import { db } from "~/server/db";
 import { InsertIngredient, ingredients as ingredientsTable } from "~/server/db/schema";
 
 type GetIngredientsParams = {
     page: number;
     q?: string;
+    quantityGt?: number
 }
 
 export async function createIngredient(data: InsertIngredient){
@@ -23,10 +24,19 @@ export async function getIngredient(id: number){
     return ingredient[0]
 }
 
-export async function getIngredients({page, q}: GetIngredientsParams){
+export async function getIngredients({page, q, quantityGt}: GetIngredientsParams){
     const itemsPerPage = 10
 
-    const where = q ? ilike(ingredientsTable.name, `%${q}%`) : undefined    
+    const quantityWhere = gt(ingredientsTable.quantity, quantityGt || 0)
+    let where = q ? ilike(ingredientsTable.name, `%${q}%`) : undefined
+    
+    if(where && quantityGt != undefined){
+        where = and(where, quantityWhere)
+    }
+
+    if(!where && quantityGt != undefined){
+        where = quantityWhere
+    }
 
    const ingredients = await db.query.ingredients.findMany({
     orderBy: [asc(ingredientsTable.name)],
